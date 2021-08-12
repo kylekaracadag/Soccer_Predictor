@@ -24,7 +24,7 @@ def get_fixture_list(soup):
 
     # Combine the team names in a string
     for home, away in zip(home_team_list, away_team_list):
-        fixture_list.append(home + " vs. " + away)
+        fixture_list.append(f"{home} vs. {away}")
 
     return fixture_list
 
@@ -97,7 +97,7 @@ def main():
                 tmp_dictionary = {}
 
                 # Add the matches to the dictionary
-                tmp_dictionary['Matches'] = fixture_list[index]
+                tmp_dictionary['Matches'] = f"{str(season)[2:]}/{str(season+1)[2:]} - {fixture_list[index]}"
 
                 # Add the home and away positions to the dictionary
                 # For the first week set league position values to 0
