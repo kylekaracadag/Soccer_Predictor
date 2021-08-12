@@ -88,7 +88,7 @@ if __name__ == "__main__":
 # X Match
 # Link for home team / Link for away team
 # HomeMarketVal / AwayMarketVal
-# HomePos / AwayPos
+# HomePositions / AwayPositions
 # HomeAvgAge / AwayAvgAge
 # HomeNumForeigners / AwayNumForeigners
 # HomeGoalDiff / AwayGoalDiff
