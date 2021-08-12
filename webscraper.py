@@ -51,6 +51,32 @@ def get_league_position(soup):
 
     return home_positions, away_positions
 
+def get_match_results(soup):
+    result_list = []
+    all = soup.find_all("div", {"class": "responsive-table"})
+    match_results = all[0].find_all("span", {"class": "matchresult finished"})
+
+    # Gather the match scores from the site
+    for index, _ in enumerate(match_results):
+        result = match_results[index]
+        result_text = result.text.strip()
+        home_result, away_result = result_text.split(':')
+        home_result = int(home_result)
+        away_result = int(away_result)
+        
+        # If home result is equal to the away result we categorize the game 
+        # as a draw or 0. If home result is greater than the away result we 
+        # categorize the game as a win ir 1. If home result is less than the 
+        # away result we categorize the game as a loss ir 2
+        if home_result == away_result:
+            result_list.append(0)
+        elif home_result > away_result:
+            result_list.append(1)
+        else:
+            result_list.append(2)
+
+    return result_list
+
 def main():
     fixture_data = []
     fixture_url = 'https://www.transfermarkt.com/super-lig/spieltagtabelle/wettbewerb/TR1?saison_id='
@@ -65,11 +91,15 @@ def main():
             soup = BeautifulSoup(content, 'html.parser')
             fixture_list = get_fixture_list(soup)
             home_positions, away_positions = get_league_position(soup)
+            result_list = get_match_results(soup)
 
             for index, _ in enumerate(fixture_list):
                 tmp_dictionary = {}
+
+                # Add the matches to the dictionary
                 tmp_dictionary['Matches'] = fixture_list[index]
 
+                # Add the home and away positions to the dictionary
                 # For the first week set league position values to 0
                 if matchday == 1:
                     tmp_dictionary['HomePositions'] = 0
@@ -77,6 +107,10 @@ def main():
                 else:
                     tmp_dictionary['HomePositions'] = home_positions[index]
                     tmp_dictionary['AwayPositions'] = away_positions[index]
+
+                # Add the match scores to the dictionary
+                tmp_dictionary['Result'] = result_list[index]
+
                 fixture_data.append(tmp_dictionary)
 
             print(f"Successfully Added Season {season}/{season+1} Matchday {matchday}")
@@ -102,7 +136,8 @@ if __name__ == "__main__":
 # HomePts / AwayPts
 # HomeStadiumCap
 # HomeNumNationalPlayers / AwayNumNationalPlayers
-# Result
+# [Done] Result
+
 # OPTIONAL
 # HomeInjuredMarketVal / AwayInjuredMarketVal
 # HomeAvgRating / AwayAvgRating
