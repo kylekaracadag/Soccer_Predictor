@@ -9,7 +9,7 @@ def get_fixture_list(soup):
     # Get the list of home teams for given week
     home_games = all[0].find_all("td", {"class": "text-right no-border-rechts no-border-links hauptlink hide-for-small"})
     home_team_list = []
-    for index in range(9):
+    for index, _ in enumerate(home_games):
         home_game = home_games[index].find_all("a", attrs={'class': "vereinprofil_tooltip"})
         for tag in home_game:
             home_team_list.append(tag.text.strip())
@@ -17,7 +17,7 @@ def get_fixture_list(soup):
     # Get the list of away teams for given week
     away_games = all[0].find_all("td", {"class": "no-border-links no-border-rechts hauptlink hide-for-small"})
     away_team_list = []
-    for index in range(9):
+    for index, _ in enumerate(away_games):
         away_game = away_games[index].find_all("a", attrs={"vereinprofil_tooltip"})
         for tag in away_game:
             away_team_list.append(tag.text.strip())
@@ -36,7 +36,7 @@ def get_league_position(soup):
     league_positions = all[0].find_all("span", {"class": "tabellenplatz"})
 
     # Gather league positions from the site
-    for index in range(36):
+    for index, _ in enumerate(league_positions):
         pos = league_positions[index]
         pos_num = int(''.join(x for x in pos.text.strip() if x.isdigit()))
         position_list.append(pos_num)
@@ -57,7 +57,7 @@ def main():
 
     for season in range(2005, 2006):
         print(f"\nAdding Data for Season {season}/{season+1}\n")
-        for matchday in range(1, 2):
+        for matchday in range(1, 3):
             season_requests = requests.get(fixture_url + str(season) + '&spieltag=' + str(matchday), 
                 headers={'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
             
@@ -69,8 +69,14 @@ def main():
             for index, _ in enumerate(fixture_list):
                 tmp_dictionary = {}
                 tmp_dictionary['Matches'] = fixture_list[index]
-                tmp_dictionary['HomePositions'] = home_positions[index]
-                tmp_dictionary['AwayPositions'] = away_positions[index]
+
+                # For the first week set league position values to 0
+                if matchday == 1:
+                    tmp_dictionary['HomePositions'] = 0
+                    tmp_dictionary['AwayPositions'] = 0
+                else:
+                    tmp_dictionary['HomePositions'] = home_positions[index]
+                    tmp_dictionary['AwayPositions'] = away_positions[index]
                 fixture_data.append(tmp_dictionary)
 
             print(f"Successfully Added Season {season}/{season+1} Matchday {matchday}")
@@ -91,7 +97,14 @@ if __name__ == "__main__":
 # HomeAvgAge / AwayAvgAge
 # HomeNumForeigners / AwayNumForeigners
 # HomeGoalDiff / AwayGoalDiff
+# HomeGoalsScored / AwayGoalsScored
+# HomeGoalsConceded / AwayGoalsConceded
 # HomePts / AwayPts
-# StadiumCap
+# HomeStadiumCap
 # HomeNumNationalPlayers / AwayNumNationalPlayers
 # Result
+# OPTIONAL
+# HomeInjuredMarketVal / AwayInjuredMarketVal
+# HomeAvgRating / AwayAvgRating
+# HomeInjuredAvgRating / AwayInjuredAvgRating
+# HomeWinningStreak / AwayWinningStreak
