@@ -64,15 +64,14 @@ def main():
             content = season_requests.content
             soup = BeautifulSoup(content, 'html.parser')
             fixture_list = get_fixture_list(soup)
-
-            for game in fixture_list:
-                fixture_data.append({'Matches': game})
-
             home_positions, away_positions = get_league_position(soup)
-            for home_pos in home_positions:
-                fixture_data.append({'HomePositions': int(home_pos)})
-            for away_pos in away_positions:
-                fixture_data.append({'AwayPositions': int(away_pos)})
+
+            for index, _ in enumerate(fixture_list):
+                tmp_dictionary = {}
+                tmp_dictionary['Matches'] = fixture_list[index]
+                tmp_dictionary['HomePositions'] = home_positions[index]
+                tmp_dictionary['AwayPositions'] = away_positions[index]
+                fixture_data.append(tmp_dictionary)
 
             print(f"Successfully Added Season {season}/{season+1} Matchday {matchday}")
 
