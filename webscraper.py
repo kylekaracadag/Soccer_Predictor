@@ -158,6 +158,9 @@ def main():
             for index, _ in enumerate(fixture_list):
                 tmp_dictionary = {}
 
+                # Add the match day to the dictionary
+                tmp_dictionary['Matchday'] = matchday
+                
                 # Add the matches to the dictionary
                 tmp_dictionary['Matches'] = f"{str(season)[2:]}/{str(season+1)[2:]} - {fixture_list[index]}"
 
@@ -227,15 +230,14 @@ if __name__ == "__main__":
 
 
 # [Done] Match
-
 # Matchday
-# HomeWins / AwayWins
-# HomeDraws / AwayDraws
-# HomeLosses / AwayLosses
-# HomeGoalsScored / AwayGoalsScored
-# HomeGoalsConceded / AwayGoalsConceded
-# HomeGoalDiff / AwayGoalDiff
-# HomePoints / AwayPoints
+# [Done] HomeWins / AwayWins
+# [Done] HomeDraws / AwayDraws
+# [Done] HomeLosses / AwayLosses
+# [Done] HomeGoalsScored / AwayGoalsScored
+# [Done] HomeGoalsConceded / AwayGoalsConceded
+# [Done] HomeGoalDiff / AwayGoalDiff
+# [Done] HomePoints / AwayPoints
 
 # Link for home team / Link for away team
 # HomeMarketVal / AwayMarketVal
