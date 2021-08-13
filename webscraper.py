@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas
 
+
 def get_fixture_list(soup):
     fixture_list = []
     all = soup.find_all("div", {"class": "responsive-table"})
@@ -26,7 +27,16 @@ def get_fixture_list(soup):
     for home, away in zip(home_team_list, away_team_list):
         fixture_list.append(f"{home} vs. {away}")
 
+    return home_team_list, away_team_list
+
+def get_fixture_text(home_team_list, away_team_list):
+    fixture_list = []
+
+    for home, away in zip(home_team_list, away_team_list):
+        fixture_list.append(f"{home} vs. {away}")
+
     return fixture_list
+
 
 def get_league_position(soup):
     home_positions = []
@@ -50,6 +60,33 @@ def get_league_position(soup):
     away_positions = league_position_list[1::2]
 
     return home_positions, away_positions
+
+
+def get_score_information(soup):
+    table_information = []
+    all = soup.find_all("table")
+    table = all[4].find_all("tr")
+    table = table[1:]
+
+    for index, _ in enumerate(table):
+        score_dictionary = {}
+        score_list = []
+        team_name = table[index].find_all("td", {"class": "no-border-links hauptlink"})
+        team_name = team_name[0].find_all("a", {"class": "vereinprofil_tooltip"})
+        name = team_name[0].text.strip()
+        
+        score_info = table[index].find_all("td", {"class": "zentriert"})[2:]
+        for index, _ in enumerate(score_info):
+            if score_info[index].text.strip() == '-':
+                score_list.append(0)
+            else:
+                score_list.append(score_info[index].text.strip())
+            
+        score_dictionary[name] = score_list
+        table_information.append(score_dictionary)
+
+    return table_information
+
 
 def get_match_results(soup):
     result_list = []
@@ -77,6 +114,7 @@ def get_match_results(soup):
 
     return result_list
 
+
 def main():
     fixture_data = []
     fixture_url = 'https://www.transfermarkt.com/super-lig/spieltagtabelle/wettbewerb/TR1?saison_id='
@@ -89,7 +127,9 @@ def main():
             
             content = season_requests.content
             soup = BeautifulSoup(content, 'html.parser')
-            fixture_list = get_fixture_list(soup)
+
+            home_team_list, away_team_list = get_fixture_list(soup)
+            fixture_list = get_fixture_text(home_team_list, away_team_list)
             home_positions, away_positions = get_league_position(soup)
             result_list = get_match_results(soup)
 
