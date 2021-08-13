@@ -125,15 +125,21 @@ if __name__ == "__main__":
 
 
 # [Done] Match
+
+# Matchday
+# HomeWins / AwayWins
+# HomeDraws / AwayDraws
+# HomeLosses / AwayLosses
+# HomeGoalsScored / AwayGoalsScored
+# HomeGoalsConceded / AwayGoalsConceded
+# HomeGoalDiff / AwayGoalDiff
+# HomePoints / AwayPoints
+
 # Link for home team / Link for away team
 # HomeMarketVal / AwayMarketVal
 # [Done] HomePositions / AwayPositions
 # HomeAvgAge / AwayAvgAge
 # HomeNumForeigners / AwayNumForeigners
-# HomeGoalDiff / AwayGoalDiff
-# HomeGoalsScored / AwayGoalsScored
-# HomeGoalsConceded / AwayGoalsConceded
-# HomePts / AwayPts
 # HomeStadiumCap
 # HomeNumNationalPlayers / AwayNumNationalPlayers
 # [Done] Result
