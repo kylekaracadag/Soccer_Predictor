@@ -102,8 +102,8 @@ def get_match_results(soup):
         
         # If home result is equal to the away result we categorize the game 
         # as a draw or 0. If home result is greater than the away result we 
-        # categorize the game as a win ir 1. If home result is less than the 
-        # away result we categorize the game as a loss ir 2
+        # categorize the game as a win or 1. If home result is less than the 
+        # away result we categorize the game as a loss or 2
         if home_result == away_result:
             result_list.append(0)
         elif home_result > away_result:
@@ -136,7 +136,7 @@ def main():
 
     for season in range(2005, 2006):
         print(f"\nAdding Data for Season {season}/{season+1}\n")
-        for matchday in range(2, 3):
+        for matchday in range(1, 3):
             season_requests = requests.get(fixture_url + str(season) + '&spieltag=' + str(matchday), 
                 headers={'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
             prev_season_requests = requests.get(fixture_url + str(season) + '&spieltag=' + str(matchday-1), 

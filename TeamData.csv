@@ -1,10 +1,19 @@
 ,Matches,HomePositions,AwayPositions,HomeWins,AwayWins,HomeDraws,AwayDraws,HomeLosses,AwayLosses,HomeGoalsScored,AwayGoalsScored,HomeGoalsConceded,AwayGoalsConceded,HomeGoalDiff,AwayGoalDiff,HomePoints,AwayPoints,Result
-0,05/06 - MKE Ankaragücü vs. Galatasaray A.S.,5,2,0,1,1,0,0,0,2,2,2,1,0,1,1,3,2
-1,05/06 - Malatyaspor vs. Manisaspor,9,6,0,0,1,1,0,0,1,2,1,2,0,0,1,1,2
-2,05/06 - Caykur Rizespor vs. Samsunspor,18,15,0,0,0,0,1,1,0,2,1,3,-1,-1,0,0,2
-3,05/06 - Gaziantepspor vs. Sivasspor,1,10,1,0,0,1,0,0,3,1,2,1,1,0,3,1,0
-4,05/06 - Fenerbahce SK vs. Diyarbakirspor,13,4,0,1,1,0,0,0,0,1,0,0,0,1,1,3,0
-5,05/06 - Konyaspor vs. Trabzonspor,16,3,0,1,0,0,1,0,1,2,2,1,-1,1,0,3,0
-6,05/06 - Ankaraspor vs. Genclerbirligi Ankara,11,14,0,0,1,1,0,0,1,0,1,0,0,0,1,1,0
-7,05/06 - Kayserispor vs. Kayseri Erciyesspor,17,12,0,0,0,1,1,0,1,1,2,1,-1,0,0,1,2
-8,05/06 - Besiktas JK vs. Denizlispor,7,8,0,0,1,1,0,0,1,1,1,1,0,0,1,1,1
+0,05/06 - Genclerbirligi Ankara vs. Fenerbahce SK,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+1,05/06 - Kayseri Erciyesspor vs. Besiktas JK,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+2,05/06 - Diyarbakirspor vs. Caykur Rizespor,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
+3,05/06 - Sivasspor vs. Malatyaspor,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+4,05/06 - Trabzonspor vs. Kayserispor,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
+5,05/06 - Denizlispor vs. Ankaraspor,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+6,05/06 - Galatasaray A.S. vs. Konyaspor,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
+7,05/06 - Samsunspor vs. Gaziantepspor,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2
+8,05/06 - Manisaspor vs. MKE Ankaragücü,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+9,05/06 - MKE Ankaragücü vs. Galatasaray A.S.,5,2,0,1,1,0,0,0,2,2,2,1,0,1,1,3,2
+10,05/06 - Malatyaspor vs. Manisaspor,9,6,0,0,1,1,0,0,1,2,1,2,0,0,1,1,2
+11,05/06 - Caykur Rizespor vs. Samsunspor,18,15,0,0,0,0,1,1,0,2,1,3,-1,-1,0,0,2
+12,05/06 - Gaziantepspor vs. Sivasspor,1,10,1,0,0,1,0,0,3,1,2,1,1,0,3,1,0
+13,05/06 - Fenerbahce SK vs. Diyarbakirspor,13,4,0,1,1,0,0,0,0,1,0,0,0,1,1,3,0
+14,05/06 - Konyaspor vs. Trabzonspor,16,3,0,1,0,0,1,0,1,2,2,1,-1,1,0,3,0
+15,05/06 - Ankaraspor vs. Genclerbirligi Ankara,11,14,0,0,1,1,0,0,1,0,1,0,0,0,1,1,0
+16,05/06 - Kayserispor vs. Kayseri Erciyesspor,17,12,0,0,0,1,1,0,1,1,2,1,-1,0,0,1,2
+17,05/06 - Besiktas JK vs. Denizlispor,7,8,0,0,1,1,0,0,1,1,1,1,0,0,1,1,1
