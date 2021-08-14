@@ -227,6 +227,7 @@ def clean_score_list(score_list):
 def main():
     fixture_data = []
     fixture_url = 'https://www.transfermarkt.com/super-lig/spieltagtabelle/wettbewerb/TR1?saison_id='
+    club_table_url = 'https://www.transfermarkt.com/super-lig/startseite/wettbewerb/TR1/saison_id/'
 
     for season in range(2005, 2006):
         print(f"\nAdding Data for Season {season}/{season+1}\n")
@@ -336,15 +337,14 @@ if __name__ == "__main__":
 # [Done] HomePoints / AwayPoints
 # [Done] Result
 
-# Link for home team / Link for away team
-# HomeMarketVal / AwayMarketVal
+# HomeSquadSize / AwaySquadSize
 # HomeAvgAge / AwayAvgAge
 # HomeNumForeigners / AwayNumForeigners
-# HomeStadiumCap
-# HomeNumNationalPlayers / AwayNumNationalPlayers
+# HomeAvgMarketVal / AwayAvgMarketVal
+# HomeMarketVal / AwayMarketVal
 
 # OPTIONAL
-# HomeInjuredMarketVal / AwayInjuredMarketVal
-# HomeAvgRating / AwayAvgRating
-# HomeInjuredAvgRating / AwayInjuredAvgRating
-# HomeWinningStreak / AwayWinningStreak
+# whoscored.com Head to Head Home vs. Away
+# HomeWon
+# Drew
+# AwayWon
