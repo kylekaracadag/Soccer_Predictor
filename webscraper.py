@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas
+import re
 
 
 def get_fixture_list(soup):
@@ -152,6 +153,88 @@ def get_score_information(soup):
     return table_information
 
 
+def get_club_data(soup):
+    all = soup.find_all("table", {"class": "items"})
+    table_all = all[0].find_all("tbody")
+    teams = table_all[0].find_all("td", {"class": "hauptlink no-border-links show-for-small show-for-pad"})
+    
+    # Get the names of all the teams and add to dictionary
+    team_names = {}
+    for index, _ in enumerate(teams):
+        name = teams[index].text.strip()
+        name = name.split('.')
+        team_names[name[-1].strip()] = []
+
+    team_info_list = []
+    odd_team_info = []
+    even_team_info = []
+    odd_teams = table_all[0].find_all("tr", {"class": "odd"})
+    even_teams = table_all[0].find_all("tr", {"class": "even"})
+
+    # Get the squad size, average age, and number of foreigners for each club
+    for index, _ in enumerate(odd_teams):
+        curr_team = odd_teams[index]
+        
+        # Get squad size, average age, and number of foreigners
+        squad_info = odd_teams[index].find_all("td", {"class": "zentriert"})
+        tmp_list = []
+        tmp_list.append(int(squad_info[1].text.strip())) # Squad Size
+        tmp_list.append(float(squad_info[2].text.strip())) # Average Age
+        tmp_list.append(int(squad_info[3].text.strip())) # Number of Foreigners
+        odd_team_info.append(tmp_list)
+        
+    for index, _ in enumerate(even_teams):
+        curr_team = even_teams[index]
+        
+        # Get squad size, average age, and number of foreigners
+        squad_info = even_teams[index].find_all("td", {"class": "zentriert"})
+        tmp_list = []
+        tmp_list.append(int(squad_info[1].text.strip())) # Squad Size
+        tmp_list.append(float(squad_info[2].text.strip())) # Average Age
+        tmp_list.append(int(squad_info[3].text.strip())) # Number of Foreigners
+        even_team_info.append(tmp_list)
+
+    for odd, even in zip(odd_team_info, even_team_info):
+        team_info_list.append(odd)
+        team_info_list.append(even)
+
+    market_values = table_all[0].find_all("td", {"class": "rechts hide-for-small hide-for-pad"})
+    avg_market_val_list = market_values[::2]
+    total_market_val_list = market_values[1::2]
+    market_val_list = []
+
+    # Get the average and total market value for each team
+    index = 0
+    for avg, total in zip(avg_market_val_list, total_market_val_list):
+        avg_million = False
+        total_million = False
+        if 'm' in avg.text:
+            avg_million = True
+        if 'm' in total.text:
+            total_million = True
+        
+        if avg_million:
+            avg_num = round(float(re.findall("\d+\.\d+", avg.text)[0])*1000)
+        else:
+            avg_num = round(float(re.findall(r'\d+', avg.text)[0]))
+            
+        if total_million:
+            total_num = round(float(re.findall("\d+\.\d+", total.text)[0])*1000)
+        else:
+            total_num = round(float(re.findall(r'\d+', avg.text)[0]))
+            
+        team_info_list[index].append(avg_num)
+        team_info_list[index].append(total_num)
+        index += 1
+
+    index = 0
+    for key in team_names:
+        team_names[key] = team_info_list[index]
+        index += 1
+
+    return team_names
+
+
 def get_match_results(soup):
     """Get the match results of each fixture in the current week
 
@@ -238,16 +321,25 @@ def main():
             prev_season_requests = requests.get(
                 fixture_url + str(season) + '&spieltag=' + str(matchday-1), 
                 headers={'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
+            clubs_requests = requests.get(
+                club_table_url + str(season), 
+                headers={'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
             
             content = season_requests.content
             soup = BeautifulSoup(content, 'html.parser')
+
             prev_content = prev_season_requests.content
             prev_soup = BeautifulSoup(prev_content, 'html.parser')
+
+            club_content = clubs_requests.content
+            club_soup = BeautifulSoup(club_content, 'html.parser')
 
             home_team_list, away_team_list = get_fixture_list(soup)
             fixture_list = get_fixture_text(home_team_list, away_team_list)
             home_positions, away_positions = get_league_position(soup)
             result_list = get_match_results(soup)
+            club_data = get_club_data(club_soup)
+
             score_info = {}
             if matchday != 1:
                 score_info = get_score_information(prev_soup)
@@ -309,6 +401,28 @@ def main():
                     tmp_dictionary['HomePoints'] = home_score_list[6]
                     tmp_dictionary['AwayPoints'] = away_score_list[6]
 
+                # Add the club table information to the dictionary
+                home_team_name = home_team_list[index]
+                away_team_name = away_team_list[index]
+                home_table_list = []
+                away_table_list = []
+                for key in club_data:
+                    if key in home_team_name:
+                        home_table_list = club_data[key]
+                    if key in away_team_name:
+                        away_table_list = club_data[key]
+
+                tmp_dictionary['HomeSquadSize'] = home_table_list[0]
+                tmp_dictionary['AwaySquadSize'] = away_table_list[0]
+                tmp_dictionary['HomeAvgAge'] = home_table_list[1]
+                tmp_dictionary['AwayAvgAge'] = away_table_list[1]
+                tmp_dictionary['HomeNumForeigners'] = home_table_list[2]
+                tmp_dictionary['AwayNumForeigners'] = away_table_list[2]
+                tmp_dictionary['HomeAvgMarketVal'] = home_table_list[3]
+                tmp_dictionary['AwayAvgMarketVal'] = away_table_list[3]
+                tmp_dictionary['HomeMarketVal'] = home_table_list[4]
+                tmp_dictionary['AwayMarketVal'] = away_table_list[4]
+                
                 # Add the match scores to the dictionary
                 tmp_dictionary['Result'] = result_list[index]
 
