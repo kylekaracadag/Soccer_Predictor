@@ -353,7 +353,7 @@ def main():
     fixture_url = 'https://www.transfermarkt.com/super-lig/spieltagtabelle/wettbewerb/TR1?saison_id='
     club_table_url = 'https://www.transfermarkt.com/super-lig/startseite/wettbewerb/TR1/saison_id/'
 
-    for season in range(2019, 2021):
+    for season in range(2005, 2021):
         print(f"\nAdding Data for Season {season}/{season+1}\n")
         upper_matchday = 35
         if season == 2020:
