@@ -140,14 +140,23 @@ def get_score_information(soup):
         # list we trim down the name of the team to only include the main name
         name = team_name[0].text.strip()
         name = name.split('.')[-1].strip()
-        
+        name = name.split(' ')
+        if len(name) > 1:
+            if len(name[0]) > len(name[1]):
+                name = name[0]
+            else:
+                name = name[1]
+        else:
+            name = name[0]
+    #     print(f"Name: {name}")
+
         score_info = table[index].find_all("td", {"class": "zentriert"})[2:]
         for index, _ in enumerate(score_info):
             if score_info[index].text.strip() == '-':
                 score_list.append(0)
             else:
                 score_list.append(score_info[index].text.strip())
-            
+
         table_information[name] = score_list
 
     return table_information
@@ -173,13 +182,22 @@ def get_club_data(soup):
     all = soup.find_all("table", {"class": "items"})
     table_all = all[0].find_all("tbody")
     teams = table_all[0].find_all("td", {"class": "hauptlink no-border-links show-for-small show-for-pad"})
-    
+
     # Get the names of all the teams and add to dictionary
     team_names = {}
     for index, _ in enumerate(teams):
         name = teams[index].text.strip()
         name = name.split('.')
-        team_names[name[-1].strip()] = []
+        name = name[-1].strip()
+        name = name.split(' ')
+        if len(name) > 1:
+            if len(name[0]) > len(name[1]):
+                name = name[0]
+            else:
+                name = name[1]
+        else:
+            name = name[0]
+        team_names[name.strip()] = []
 
     team_info_list = []
     odd_team_info = []
@@ -190,7 +208,7 @@ def get_club_data(soup):
     # Get the squad size, average age, and number of foreigners for each club
     for index, _ in enumerate(odd_teams):
         curr_team = odd_teams[index]
-        
+
         # Get squad size, average age, and number of foreigners
         squad_info = odd_teams[index].find_all("td", {"class": "zentriert"})
         tmp_list = []
@@ -198,10 +216,10 @@ def get_club_data(soup):
         tmp_list.append(float(squad_info[2].text.strip())) # Average Age
         tmp_list.append(int(squad_info[3].text.strip())) # Number of Foreigners
         odd_team_info.append(tmp_list)
-        
+
     for index, _ in enumerate(even_teams):
         curr_team = even_teams[index]
-        
+
         # Get squad size, average age, and number of foreigners
         squad_info = even_teams[index].find_all("td", {"class": "zentriert"})
         tmp_list = []
@@ -213,6 +231,9 @@ def get_club_data(soup):
     for odd, even in zip(odd_team_info, even_team_info):
         team_info_list.append(odd)
         team_info_list.append(even)
+
+    if len(odd_team_info) > len(even_team_info):
+        team_info_list.append(odd_team_info[-1])
 
     market_values = table_all[0].find_all("td", {"class": "rechts hide-for-small hide-for-pad"})
     avg_market_val_list = market_values[::2]
@@ -228,17 +249,17 @@ def get_club_data(soup):
             avg_million = True
         if 'm' in total.text:
             total_million = True
-        
+
         if avg_million:
             avg_num = round(float(re.findall("\d+\.\d+", avg.text)[0])*1000)
         else:
             avg_num = round(float(re.findall(r'\d+', avg.text)[0]))
-            
+
         if total_million:
             total_num = round(float(re.findall("\d+\.\d+", total.text)[0])*1000)
         else:
             total_num = round(float(re.findall(r'\d+', avg.text)[0]))
-            
+
         team_info_list[index].append(avg_num)
         team_info_list[index].append(total_num)
         index += 1
@@ -313,9 +334,13 @@ def clean_score_list(score_list):
     table_information.append(int(score_list[1])) # NumDraws
     table_information.append(int(score_list[2])) # NumLosses
 
-    goals = score_list[3].split(':')
-    table_information.append(int(goals[0])) # GoalsScored
-    table_information.append(int(goals[1])) #GoalsConceded
+    if isinstance(score_list[3], str):
+        goals = score_list[3].split(':')
+        table_information.append(int(goals[0])) # GoalsScored
+        table_information.append(int(goals[1])) #GoalsConceded
+    else:
+        table_information.append(0) # GoalsScored
+        table_information.append(0) #GoalsConceded
 
     table_information.append(int(score_list[4])) # GoalAvg
     table_information.append(int(score_list[5])) # Points
@@ -328,9 +353,13 @@ def main():
     fixture_url = 'https://www.transfermarkt.com/super-lig/spieltagtabelle/wettbewerb/TR1?saison_id='
     club_table_url = 'https://www.transfermarkt.com/super-lig/startseite/wettbewerb/TR1/saison_id/'
 
-    for season in range(2005, 2006):
+    for season in range(2019, 2021):
         print(f"\nAdding Data for Season {season}/{season+1}\n")
-        for matchday in range(1, 3):
+        upper_matchday = 35
+        if season == 2020:
+            upper_matchday = 43
+
+        for matchday in range(1, upper_matchday):
             season_requests = requests.get(
                 fixture_url + str(season) + '&spieltag=' + str(matchday), 
                 headers={'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
@@ -440,7 +469,10 @@ def main():
                 tmp_dictionary['AwayMarketVal'] = away_table_list[4]
                 
                 # Add the match scores to the dictionary
-                tmp_dictionary['Result'] = result_list[index]
+                if len(result_list) < 9 and index == 8:
+                    tmp_dictionary['Result'] = 0
+                else:
+                    tmp_dictionary['Result'] = result_list[index]
 
                 fixture_data.append(tmp_dictionary)
 
