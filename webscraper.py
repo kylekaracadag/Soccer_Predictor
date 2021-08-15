@@ -154,6 +154,22 @@ def get_score_information(soup):
 
 
 def get_club_data(soup):
+    """Get the club data of each team
+
+    This function returns the name of each team in the current season
+    and returns a dictionary with their squad size, average age, number
+    of foreigners, average market value, and the total market 
+    value (in thousands)
+
+    Args:
+        soup: The parsed HTML data that we got from BeautifulSoup 
+        on the link for the given season's club table page on transfermarkt
+
+    Returns:
+        A dictionary that has the team name as the key and a list of all
+        the information listed above as the value
+    """
+
     all = soup.find_all("table", {"class": "items"})
     table_all = all[0].find_all("tbody")
     teams = table_all[0].find_all("td", {"class": "hauptlink no-border-links show-for-small show-for-pad"})
@@ -449,16 +465,9 @@ if __name__ == "__main__":
 # [Done] HomeGoalsConceded / AwayGoalsConceded
 # [Done] HomeGoalDiff / AwayGoalDiff
 # [Done] HomePoints / AwayPoints
+# [Done] HomeSquadSize / AwaySquadSize
+# [Done] HomeAvgAge / AwayAvgAge
+# [Done] HomeNumForeigners / AwayNumForeigners
+# [Done] HomeAvgMarketVal / AwayAvgMarketVal
+# [Done] HomeMarketVal / AwayMarketVal
 # [Done] Result
-
-# HomeSquadSize / AwaySquadSize
-# HomeAvgAge / AwayAvgAge
-# HomeNumForeigners / AwayNumForeigners
-# HomeAvgMarketVal / AwayAvgMarketVal
-# HomeMarketVal / AwayMarketVal
-
-# OPTIONAL
-# whoscored.com Head to Head Home vs. Away
-# HomeWon
-# Drew
-# AwayWon
