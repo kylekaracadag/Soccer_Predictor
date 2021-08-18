@@ -32,6 +32,18 @@ def main():
 
 
 def load_data(filename):
+    """Load data from the given csv file name
+
+    This function seperates the labels and the evidence from the csv
+    file with all the webscraped data
+
+    Args:
+        filename: filename of the csv file with the webscraped data
+
+    Returns:
+        The list of labels and evidence gotten from the csv file
+    """
+
     evidence_list = []
     label_list = []
 
@@ -74,9 +86,20 @@ def load_data(filename):
 
 
 def train_model(evidence, labels, type):
+    """Train the machine learning models
+
+    This function trains machine learning model for logistic regression, 
+    naive bayes, K-nearest neighbor, random forest, and support vector machine
+
+    Args:
+        evidence: list of evidence from the csv file
+        labels: list of labels from the csv file
+        type: type of machine learning algortithm
+
+    Returns:
+        The model after fitting the evidence and labels to the 5 algorithms
     """
-    
-    """
+
     model = None
 
     # Logistic Regression Model
@@ -103,8 +126,18 @@ def train_model(evidence, labels, type):
 
 
 def evaluate(x_test, y_test, predictions, type):
-    """
-    
+    """Find the accuract percentage of the models
+
+    This function prints the accuracy percentage for each of the five models
+
+    Args:
+        x_test: evidence that were allocated for testing
+        y_test: labels that were allocated for testing
+        predictions: models we got from the algorithms
+        type: type of model
+
+    Returns:
+        The same list as the score_list but all the values are converted to int
     """
 
     # Logistic Regression Predictions
