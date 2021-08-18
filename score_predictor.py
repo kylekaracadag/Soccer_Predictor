@@ -1,25 +1,34 @@
 import csv
+import os
+import numpy as np
+import pandas as pd
 
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn import svm
 
 def main():
     team_data = 'TeamData.csv'
     evidence, labels = load_data(team_data)
     X_train, X_test, y_train, y_test = train_test_split(
-        evidence, labels, test_size=0.4
+        evidence, labels, test_size=0.2
     )
 
     # Train model and make predictions
-    model = train_model(X_train, y_train)
-    predictions = model.predict(X_test)
-    sensitivity, specificity = evaluate(y_test, predictions)
+    logistic_regression_model = train_model(X_train, y_train, 1)
+    naive_bayes_model = train_model(X_train, y_train, 2)
+    knearest_neighbor_model = train_model(X_train, y_train, 3)
+    random_forest_model = train_model(X_train, y_train, 4)
+    svm_model = train_model(X_train, y_train, 5)
 
-    # Print results
-    print(f"Correct: {(y_test == predictions).sum()}")
-    print(f"Incorrect: {(y_test != predictions).sum()}")
-    print(f"True Positive Rate: {100 * sensitivity:.2f}%")
-    print(f"True Negative Rate: {100 * specificity:.2f}%")
+    evaluate(X_test, y_test, logistic_regression_model, 1)
+    evaluate(X_test, y_test, naive_bayes_model, 2)
+    evaluate(X_test, y_test, knearest_neighbor_model, 3)
+    evaluate(X_test, y_test, random_forest_model, 4)
+    evaluate(X_test, y_test, svm_model, 5)
 
 
 def load_data(filename):
@@ -64,48 +73,65 @@ def load_data(filename):
     return (evidence_list, label_list)
 
 
-def train_model(evidence, labels):
+def train_model(evidence, labels, type):
     """
-    Given a list of evidence lists and a list of labels, return a
-    fitted k-nearest neighbor model (k=1) trained on the data.
+    
     """
-    model = KNeighborsClassifier(n_neighbors=1)
-    return model.fit(evidence, labels)
+    model = None
+
+    # Logistic Regression Model
+    if type == 1:
+        model = LogisticRegression(max_iter=10000).fit(evidence, labels)
+    
+    # Naive Bayes Model
+    if type == 2:
+        model = GaussianNB().fit(evidence, labels)
+
+    # K-Nearest Neighbor Model
+    if type == 3:
+        model = KNeighborsClassifier(n_neighbors=1).fit(evidence, labels)
+
+    # Random Forest Model
+    if type == 4:
+        model = DecisionTreeClassifier(random_state=1).fit(evidence, labels)
+
+    # Support Vector Machine Model
+    if type == 5:
+        model = svm.SVC().fit(evidence, labels)
+
+    return model
 
 
-def evaluate(labels, predictions):
+def evaluate(x_test, y_test, predictions, type):
     """
-    Given a list of actual labels and a list of predicted labels,
-    return a tuple (sensitivity, specificty).
-
-    Assume each label is either a 1 (positive) or 0 (negative).
-
-    `sensitivity` should be a floating-point value from 0 to 1
-    representing the "true positive rate": the proportion of
-    actual positive labels that were accurately identified.
-
-    `specificity` should be a floating-point value from 0 to 1
-    representing the "true negative rate": the proportion of
-    actual negative labels that were accurately identified.
+    
     """
-    true_count, false_count = 0, 0
-    sensitivity_count, specificity_count = 0, 0
 
-    for label, prediction in zip(labels, predictions):
-        if label:
-            true_count += 1
-            if prediction:
-                sensitivity_count += 1
-        else:
-            false_count += 1
-            if not prediction:
-                specificity_count += 1
+    # Logistic Regression Predictions
+    if type == 1:
+        score = round(predictions.score(x_test, y_test), 2)
+        print(f"Score for the logistic regression model: {score*100}%")
+    
+    # Naive Bayes Predictions
+    if type == 2:
+        score = round(predictions.score(x_test, y_test), 2)
+        print(f"Score for the naive bayes model: {score*100}%")
 
-    sensitivity = sensitivity_count / true_count
-    specificity = specificity_count / false_count
-        
+    # K-Nearest Neighbor Predictions
+    if type == 3:
+        score = round(predictions.score(x_test, y_test), 2)
+        print(f"Score for the K-Nearest neighbor model: {score*100}%")
 
-    return (sensitivity, specificity)
+    # Random Forest Predictions
+    if type == 4:
+        score = round(predictions.score(x_test, y_test), 2)
+        print(f"Score for the random forest model: {score*100}%")
+
+    # Support Vector Machine Predictions
+    if type == 5:
+        score = round(predictions.score(x_test, y_test), 2)
+        print(f"Score for the support vector machine model: {score*100}%")
+    
 
 if __name__ == "__main__":
     main()
