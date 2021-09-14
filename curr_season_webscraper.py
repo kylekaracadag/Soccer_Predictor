@@ -355,9 +355,9 @@ def main():
 
     for season in range(2021, 2022):
         print(f"\nAdding Data for Season {season}/{season+1}\n")
-        upper_matchday = 2
+        upper_matchday = 5
 
-        for matchday in range(1, upper_matchday):
+        for matchday in range(3, upper_matchday):
             season_requests = requests.get(
                 fixture_url + str(season) + '&spieltag=' + str(matchday), 
                 headers={'User-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'})
